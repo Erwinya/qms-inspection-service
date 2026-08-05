@@ -1,0 +1,13 @@
+target/
+.idea/
+*.iml
+.vscode/
+.cursor/
+.classpath
+.project
+.settings/
+.DS_Store
+Thumbs.db
+*.class
+*.log
+.github/modernize/
