@@ -1,0 +1,5 @@
+# Includes one out-of-spec reading
+0.501
+0.498
+0.530
+0.495

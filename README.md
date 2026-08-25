@@ -72,12 +72,43 @@ docker compose up --build
 
 Compose sets `SPRING_PROFILES_ACTIVE=docker` so the API uses PostgreSQL.
 
+Published host ports:
+
+| Service | Host port | Container |
+|---------|-----------|-----------|
+| API | 8083 | 8083 |
+| Postgres | 5435 | 5432 |
+
+Hybrid run (API on host, DB in Compose):
+
+```powershell
+docker compose up db -d
+$env:SPRING_PROFILES_ACTIVE="docker"
+$env:DB_URL="jdbc:postgresql://localhost:5435/qms_inspection"
+$env:DB_USERNAME="qms"
+$env:DB_PASSWORD="qms"
+.\mvnw.cmd spring-boot:run
+```
+
+## Native companion (C)
+
+[`native/inspection-check`](native/inspection-check) is a small C11 CLI that checks measurement values against a min/max tolerance window. It complements the Java API for local/scripted inspection evaluation.
+
+```bash
+cd native/inspection-check
+make
+./inspection-check --min 0.48 --max 0.52 --file samples/measures.txt
+```
+
+On Windows with MinGW/MSYS2: `build.bat`
+
 ## Tech
 
 - Spring Boot 3.5 / Java 17
 - Spring Data JPA
 - springdoc OpenAPI
 - H2 by default (`local`) / PostgreSQL via Docker (`docker`)
+- C11 companion CLI (`native/inspection-check`)
 
 ## License
 
