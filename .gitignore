@@ -11,3 +11,10 @@ Thumbs.db
 *.class
 *.log
 .github/modernize/
+
+# C / native
+*.o
+*.obj
+*.exe
+native/inspection-check/inspection-check
+native/inspection-check/build/

@@ -1,0 +1,6 @@
+# Incoming wafer thickness (mm) — sample lot LOT-4821
+0.501
+0.498
+0.510
+0.495
+0.503
