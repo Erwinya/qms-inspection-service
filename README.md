@@ -12,6 +12,7 @@ Companion service: [qms-ncr-service](https://github.com/Erwinya/qms-ncr-service)
 - Track workflow status and final result (PASS / FAIL / CONDITIONAL)
 - Optionally link a related NCR number when a failure is escalated
 - List/filter by status or result
+- Expose `/actuator/health` for local and container probes
 
 ```text
 PLANNED → IN_PROGRESS → COMPLETED
@@ -35,9 +36,14 @@ Completing an inspection requires a final result.
 Open:
 
 - Swagger UI: http://localhost:8083/swagger-ui.html
+- Health: http://localhost:8083/actuator/health
 - API root redirects to Swagger
 
 ## Example
+
+```bash
+curl -s http://localhost:8083/actuator/health
+```
 
 ```http
 POST /api/v1/inspections
@@ -102,10 +108,17 @@ make
 
 On Windows with MinGW/MSYS2: `build.bat`
 
+## Tests
+
+```powershell
+.\mvnw.cmd test
+```
+
 ## Tech
 
 - Spring Boot 3.5 / Java 17
 - Spring Data JPA
+- Spring Boot Actuator
 - springdoc OpenAPI
 - H2 by default (`local`) / PostgreSQL via Docker (`docker`)
 - C11 companion CLI (`native/inspection-check`)

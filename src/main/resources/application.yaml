@@ -17,6 +17,15 @@ spring:
     open-in-view: false
     show-sql: false
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+  endpoint:
+    health:
+      show-details: never
+
 springdoc:
   api-docs:
     path: /v3/api-docs
