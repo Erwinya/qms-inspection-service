@@ -26,6 +26,7 @@ Completing an inspection requires a final result.
 
 - Java 17+
 - Maven 3.9+
+- GitHub Actions CI runs `./mvnw test` on push
 
 ## Run locally (H2 by default)
 
