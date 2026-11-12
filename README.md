@@ -11,6 +11,7 @@ Companion service: [qms-ncr-service](https://github.com/Erwinya/qms-ncr-service)
 - Create planned inspections with lot/part context and inspector
 - Track workflow status and final result (PASS / FAIL / CONDITIONAL)
 - Optionally link a related NCR number when a failure is escalated
+- Field-level validation (`VALIDATION_FAILED`); final result required for `COMPLETED`
 - List/filter by status or result
 - Expose `/actuator/health` for local and container probes
 

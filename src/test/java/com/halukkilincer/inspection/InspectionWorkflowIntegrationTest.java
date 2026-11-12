@@ -63,6 +63,15 @@ class InspectionWorkflowIntegrationTest {
         mockMvc.perform(put("/api/v1/inspections/{id}/status", id)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
+                                {"status":"COMPLETED"}
+                                """))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.data").value(
+                        "Completed inspections require a final result (PASS, FAIL, or CONDITIONAL)"));
+
+        mockMvc.perform(put("/api/v1/inspections/{id}/status", id)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
                                 {
                                   "status":"COMPLETED",
                                   "result":"FAIL",
@@ -85,5 +94,23 @@ class InspectionWorkflowIntegrationTest {
                                 {"status":"PLANNED"}
                                 """))
                 .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void create_RejectsInvalidPayload() throws Exception {
+        mockMvc.perform(post("/api/v1/inspections")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {
+                                  "title":"",
+                                  "checklistSummary":"",
+                                  "inspector":""
+                                }
+                                """))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.statusMessage").value("VALIDATION_FAILED"))
+                .andExpect(jsonPath("$.data.title").exists())
+                .andExpect(jsonPath("$.data.checklistSummary").exists())
+                .andExpect(jsonPath("$.data.inspector").exists());
     }
 }
