@@ -17,3 +17,5 @@ jobs:
           cache: maven
       - name: Test
         run: bash ./mvnw -B test
+      - name: Native CLI tests
+        run: make -C native/inspection-check test

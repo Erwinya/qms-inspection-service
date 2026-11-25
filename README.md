@@ -102,19 +102,34 @@ $env:DB_PASSWORD="qms"
 
 [`native/inspection-check`](native/inspection-check) is a small C11 CLI that checks measurement values against a min/max tolerance window. It complements the Java API for local/scripted inspection evaluation.
 
+Parser guarantees:
+
+- Rejects non-finite `--min` / `--max` and measurement values (`NaN`, infinity)
+- Rejects overlong input lines instead of silently splitting them
+- Allows leading whitespace before values and `#` comments
+
 ```bash
 cd native/inspection-check
 make
+make test
 ./inspection-check --min 0.48 --max 0.52 --file samples/measures.txt
 ```
 
-On Windows with MinGW/MSYS2: `build.bat`
+On Windows with MinGW/MSYS2:
+
+```bat
+cd native\inspection-check
+build.bat
+build.bat test
+```
 
 ## Tests
 
 ```powershell
 .\mvnw.cmd test
 ```
+
+CI runs Maven tests and `make -C native/inspection-check test`.
 
 ## Tech
 
