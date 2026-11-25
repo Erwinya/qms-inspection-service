@@ -2,6 +2,7 @@
 
 #include <ctype.h>
 #include <errno.h>
+#include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -50,7 +51,7 @@ static int parse_double_arg(const char *label, const char *text, double *out)
     char *end = NULL;
     errno = 0;
     double value = strtod(text, &end);
-    if (errno != 0 || end == text || *end != '\0') {
+    if (errno != 0 || end == text || *end != '\0' || !isfinite(value)) {
         fprintf(stderr, "error: invalid %s value '%s'\n", label, text);
         return -1;
     }
@@ -180,14 +181,34 @@ int load_measurements(FILE *in, MeasurementList *list)
     while (fgets(line, sizeof(line), in) != NULL) {
         ++line_number;
 
-        if (is_blank_line(line) || line[0] == '#') {
+        size_t len = strlen(line);
+        int truncated = (len == sizeof(line) - 1 && line[len - 1] != '\n');
+        if (truncated) {
+            int ch;
+            while ((ch = fgetc(in)) != EOF && ch != '\n') {
+                /* drain remainder of oversized line */
+            }
+            fprintf(stderr, "error: line %d exceeds maximum length\n", line_number);
+            return -1;
+        }
+
+        const char *cursor = line;
+        while (*cursor != '\0' && isspace((unsigned char)*cursor)) {
+            ++cursor;
+        }
+
+        if (*cursor == '\0' || *cursor == '#') {
+            continue;
+        }
+
+        if (is_blank_line(line)) {
             continue;
         }
 
         char *end = NULL;
         errno = 0;
-        double value = strtod(line, &end);
-        if (errno != 0 || end == line) {
+        double value = strtod(cursor, &end);
+        if (errno != 0 || end == cursor || !isfinite(value)) {
             fprintf(stderr, "error: invalid measurement on line %d\n", line_number);
             return -1;
         }
